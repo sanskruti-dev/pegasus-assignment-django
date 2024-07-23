@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Library</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .header2 {
+            font-size: 30px;
+            font-weight: 600;
+            background-image: linear-gradient(to left, #553c9a, #9cb778);
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+        .header1 {
+            font-size: 70px;
+            font-weight: 600;
+            background-image: linear-gradient(to right, #553c9a 45%, #ee4b2b);
+            color: transparent;
+            background-clip: text;
+            text-align: center;
+            -webkit-background-clip: text;
+        }
+        .header3{
+            font-size: 20px;
+            font-weight: 600;
+            background-image: linear-gradient(to left, #b6961a, #5e83b6);
+            color: transparent;
+            background-clip: text;
+            /* text-align: center; */
+            -webkit-background-clip: text;
+        }
+        .header4 {
+            font-size: 30px;
+            font-weight: 600;
+            background-image: linear-gradient(to left, #b6961a, #da59c5);
+            color: transparent;
+            background-clip: text;
+            /* text-align: center; */
+            -webkit-background-clip: text;
+        }
+    </style>
+</head>
+<body style="background:#fbe3e8"><h1 class="header1">Music Library</h1>
+    <div class="container" style="display:flex;max-width: 100%;">
+        <div class="list-group" style="align-items:center;width: 35%;margin-right: 10rem;">
+            <h2 class="header2">All Music Tracks</h2>
+            <a href="{% url 'create_music' %}" class="btn btn-success mt-3 mb-3" style="max-width: 40%">Add Music</a>
+            {% for track in music_tracks %}
+                <div class="list-group-item" style="width: 100%;background:#DFCFBE">
+                    <h5 class="header3">{{ track.title }} - {{ track.artist }}</h5>
+                    <audio controls>
+                        <source src="{{ track.file.url }}" type="audio/mpeg">
+                    </audio>
+                    <a href="{% url 'favorite_music' track.id %}" class="btn btn-primary" style="margin-top: -3rem;">
+                        <i class="fas {% if user in track.favorited_by.all %}fa-heart{% else %}fa-heart-broken{% endif %}"></i>
+                    </a>
+                    <a href="{% url 'update_music' track.id %}" class="btn btn-info" style="margin-top: -3rem;">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'delete_music' track.id %}" class="btn btn-danger" style="margin-top: -3rem;">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="list-group" style="align-items:center;width: 50%;">
+            <h2 class="header2">Your Folders</h2>
+            <a href="{% url 'create_folder' %}" class="btn btn-success mt-3 mb-3" style="max-width: 40%">Create Folder</a>
+            <div class="list-group-item" style="width: 100%;background: #faedb7;">
+                <h5 class="header4">Favorites</h5>
+                <div class="mt-3">
+                    {% for track in favorite_tracks %}
+                        <div class="list-group-item" style="width: 100%;background: #DFCFBE">
+                            <h5 class="header3">{{ track.title }} - {{ track.artist }}</h5>
+                            <audio controls>
+                                <source src="{{ track.file.url }}" type="audio/mpeg">
+                            </audio>
+                            <a href="{% url 'favorite_music' track.id %}" class="btn btn-primary" style="margin-top: -3rem;">
+                                <i class="fas {% if user in track.favorited_by.all %}fa-heart{% else %}fa-heart-broken{% endif %}"></i>
+                            </a>
+                            <a href="{% url 'update_music' track.id %}" class="btn btn-info" style="margin-top: -3rem;">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'delete_music' track.id %}" class="btn btn-danger" style="margin-top: -3rem;">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% for folder in folders %}
+                <div class="list-group-item" style="width: 100%;background: #faedb7;">
+                    <h5 class="header4">{{ folder.name }}</h5>
+                    <a href="{% url 'add_music_to_folder' folder.id %}" class="btn btn-secondary">Add Music to {{ folder.name }}</a>
+                    <a href="{% url 'update_folder' folder.id %}" class="btn btn-info">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'delete_folder' folder.id %}" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                    <div class="mt-3">
+                        {% for track in folder.music_tracks.all %}
+                            <div class="list-group-item" style="width: 100%;background: #DFCFBE">
+                                <h5 class="header3">{{ track.title }} - {{ track.artist }}</h5>
+                                <audio controls>
+                                    <source src="{{ track.file.url }}" type="audio/mpeg">
+                                </audio>
+                                <a href="{% url 'favorite_music' track.id %}" class="btn btn-primary" style="margin-top: -3rem;">
+                                    <i class="fas {% if user in track.favorited_by.all %}fa-heart{% else %}fa-heart-broken{% endif %}"></i>
+                                </a>
+                                <a href="{% url 'update_music' track.id %}" class="btn btn-info" style="margin-top: -3rem;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete_music' track.id %}" class="btn btn-danger" style="margin-top: -3rem;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

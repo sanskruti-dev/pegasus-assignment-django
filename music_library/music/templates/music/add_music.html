@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Add Music{% endblock %}
+
+{% block content %}
+  <h2>Add Music</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+{% endblock %}
